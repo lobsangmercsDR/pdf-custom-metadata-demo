@@ -1,0 +1,17 @@
+%Image::ExifTool::UserDefined = (
+  'Image::ExifTool::XMP::Main' => {
+    firma => {
+      SubDirectory => { TagTable => 'Image::ExifTool::UserDefined::firma' },
+    },
+  },
+);
+
+%Image::ExifTool::UserDefined::firma = (
+  GROUPS    => { 0=>'XMP', 1=>'XMP-firma', 2=>'Document' },
+  NAMESPACE => { 'firma' => 'http://ns.mycompany.com/firma/1.0/' },
+  WRITABLE  => 'string',
+  custom_id => {},
+  project   => {},
+);
+
+1;  # fin del archivo

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Visor PDF + Metadata</title>
+    <script defer>
+      window.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const metadataRaw = params.get("metadata");
+        const form = document.getElementById("uploadForm");
+        const viewer = document.getElementById("metadataViewer");
+        const tableBody = document.getElementById("metadataTableBody");
+        const backBtn = document.getElementById("backButton");
+
+        if (metadataRaw) {
+          const metadata = JSON.parse(decodeURIComponent(metadataRaw));
+          form.classList.add("hidden");
+          viewer.classList.remove("hidden");
+
+          for (const key in metadata) {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+            <td class="border px-4 py-2 font-mono text-gray-600">${key}</td>
+            <td class="border px-4 py-2">${metadata[key] || "-"}</td>
+          `;
+            tableBody.appendChild(row);
+          }
+        }
+
+        backBtn.addEventListener("click", () => {
+          window.location.href = "/index.html";
+        });
+      });
+    </script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css"
+      rel="stylesheet"
+    />
+  </head>
+  <body
+    class="bg-gray-100 min-h-screen flex items-center justify-center px-4 py-10"
+  >
+    <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-2xl">
+      <h2 class="text-2xl font-bold mb-6 flex items-center gap-2">
+        📄 Metadatos del PDF
+      </h2>
+
+      <!-- Formulario de subida -->
+      <form
+        id="uploadForm"
+        action="/upload"
+        method="post"
+        enctype="multipart/form-data"
+        class="space-y-4"
+      >
+        <input
+          type="file"
+          name="pdf"
+          accept="application/pdf"
+          required
+          class="block w-full text-sm text-gray-700"
+        />
+        <button
+          type="submit"
+          class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+        >
+          Subir y agregar metadata
+        </button>
+      </form>
+
+      <!-- Visor de metadatos -->
+      <div id="metadataViewer" class="hidden">
+        <table class="w-full mt-4 border rounded text-sm">
+          <thead>
+            <tr class="bg-gray-200 text-left">
+              <th class="px-4 py-2">Campo</th>
+              <th class="px-4 py-2">Valor</th>
+            </tr>
+          </thead>
+          <tbody id="metadataTableBody" class="bg-white"></tbody>
+        </table>
+
+        <div class="mt-6 text-center">
+          <button id="backButton" class="text-blue-600 hover:underline text-sm">
+            🔁 Volver a subir otro PDF
+          </button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
